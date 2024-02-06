@@ -1,0 +1,21 @@
+{
+  "name": "polls-nlw",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "repository": "https://github.com/garciamendes/polls-nlw.git",
+  "author": "garciamendes <garciaprog0101@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "fastify": "^4.26.0",
+    "zod": "^3.22.4"
+  }
+}
