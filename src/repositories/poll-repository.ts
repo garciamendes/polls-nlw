@@ -1,5 +1,7 @@
-import { Poll, Prisma } from '@prisma/client'
+import { Poll } from '@prisma/client'
+import { ICreatePollAndCreateOptions, IParansGetDetailPoll } from './types'
 
 export interface IPollRepository {
-  create: (data: Prisma.PollCreateInput) => Promise<Poll>
+  create: (data: ICreatePollAndCreateOptions) => Promise<Poll>
+  pollById: ({ pollId }: IParansGetDetailPoll) => Promise<Poll | null>
 }
