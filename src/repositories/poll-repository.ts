@@ -3,5 +3,5 @@ import { ICreatePollAndCreateOptions, IParansGetDetailPoll } from './types'
 
 export interface IPollRepository {
   create: (data: ICreatePollAndCreateOptions) => Promise<Poll>
-  pollById: ({ pollId }: IParansGetDetailPoll) => Promise<Poll | null>
+  pollById: ({ pollId }: IParansGetDetailPoll) => Promise<object | null>
 }

@@ -3,6 +3,8 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z as zod } from 'zod'
 import { makeVoteOnPollUseCase } from '@/useCases/factories/make-create-vote-on-poll'
 import { prisma } from '@/lib/prisma'
+import { redis } from '@/lib/redis'
+import { voting } from '@/utils/voting-pub-suv'
 
 export const voteOnPoll = async (request: FastifyRequest, reply: FastifyReply) => {
   const voteOnPollBody = zod.object({
@@ -35,6 +37,11 @@ export const voteOnPoll = async (request: FastifyRequest, reply: FastifyReply) =
         }
       })
 
+      const votes = await redis.zincrby(pollId, -1, userPreviousVoteOnPoll.optionsPollId)
+      voting.publish(pollId, {
+        pollOptionId: userPreviousVoteOnPoll.optionsPollId,
+        votes: Number(votes)
+      })
     } else if (userPreviousVoteOnPoll) {
 
       return reply.status(400).send({ message: 'You already voted on this poll' })
@@ -57,6 +64,13 @@ export const voteOnPoll = async (request: FastifyRequest, reply: FastifyReply) =
 
     await makeVoteOnPoll.execute({
       optionsPollId: pollOptionId, pollId, sessionId: sessionId as string
+    })
+
+    const votes = await redis.zincrby(pollId, 1, pollOptionId)
+
+    voting.publish(pollId, {
+      pollOptionId,
+      votes: Number(votes)
     })
 
     return reply.status(201).send()
